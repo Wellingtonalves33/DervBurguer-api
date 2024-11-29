@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 import User from '../models/User';
-
+import jwt from 'jsonwebtoken';
+import authConfig from '../../config/auth';
 
 
 class SessionController {
@@ -16,7 +17,7 @@ class SessionController {
             return response.status(401).json({error:'email ou senha invalido'})
         }
 
-            if(!isValid){
+            if(!isValid){  
               return  emailOrPasswordIncorrect()
             }
         
@@ -36,7 +37,15 @@ class SessionController {
             return emailOrPasswordIncorrect()
             }
 
-        return response.status(201).json({id: user.id, name: user.name, email, admin: user.admin});
+        return response.status(201).json({
+            id: user.id, 
+            name: user.name, 
+            email, 
+            admin: user.admin,
+            token: jwt.sign({id:user.id},authConfig.secret,{
+                expiresIn: authConfig.expiresIn,
+            })
+        });
     }
 }
 
