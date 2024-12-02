@@ -18,6 +18,13 @@ class Product extends Model {
             sequelize
         },
         );
+        return this;
+    }
+    static associante(models){
+        this.belongsTo(models.category, {
+            foreignKey: 'category_id',
+            as: 'category',
+        });
     }
 }
 
