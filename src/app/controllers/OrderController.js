@@ -4,7 +4,6 @@ import Product from "../models/Product";
 import Category from "../models/Category";
 import User from "../models/User";
 
-
 class OrderController {
     async store(request, response) {
         const schema = Yup.object({
@@ -41,8 +40,16 @@ class OrderController {
             ],
         });
 
+        if (findProducts.length !== productsIds.length) {
+            return response.status(400).json({ error: "Alguns produtos não foram encontrados" });
+        }
+
         const formattedproducts = findProducts.map(product => {
             const productIndex = products.findIndex((item) => item.id === product.id);
+
+            if (productIndex === -1) {
+                throw new Error(`Produto com id ${product.id} não encontrado no pedido`);
+            }
 
             const newProduct = {
                 id: product.id,
@@ -50,9 +57,9 @@ class OrderController {
                 category: product.category.name,
                 price: product.price,
                 url: product.url,
-                quantity: product[productIndex].quantity,
+                quantity: products[productIndex].quantity,
             };
-            return newProduct
+            return newProduct;
         });
 
         const order = {
@@ -64,14 +71,21 @@ class OrderController {
             status: "pedido realizado",
         };
 
-        const createOrder = await Order.create(order);
-
-        return response.status(201).json(createOrder);
+        try {
+            const createOrder = await Order.create(order);
+            return response.status(201).json(createOrder);
+        } catch (err) {
+            return response.status(400).json({ error: "Erro ao criar pedido" });
+        }
     }
 
     async index(request, response) {
-        const orders = await Order.find();
-        return response.json(orders);
+        try {
+            const orders = await Order.find();
+            return response.json(orders);
+        } catch (err) {
+            return response.status(400).json({ error: "Erro ao buscar pedidos" });
+        }
     }
 
     async update(request, response) {
@@ -84,22 +98,23 @@ class OrderController {
         } catch (err) {
             return response.status(400).json({ error: err.errors });
         }
-        const { admin: isAdmin } = await User.findByPk(request.userId);
 
-        if (!isAdmin){
-            return response.status(401).json();
-        }
+        try {
+            const { admin: isAdmin } = await User.findByPk(request.userId);
 
-        const { id } = request.params;
-        const { status } = request.body;
+            if (!isAdmin) {
+                return response.status(401).json({ error: "Não autorizado" });
+            }
 
-        try{
+            const { id } = request.params;
+            const { status } = request.body;
+
             await Order.updateOne({ _id: id }, { status });
-        } catch (err) {
-            return response.status(400).json({error: err.message});
-        }
 
-        return response.json({ message: "status update sucessfully" });
+            return response.json({ message: "Status atualizado com sucesso" });
+        } catch (err) {
+            return response.status(400).json({ error: err.message });
+        }
     }
 }
 
