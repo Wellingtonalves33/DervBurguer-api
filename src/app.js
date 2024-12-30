@@ -18,7 +18,8 @@ class App {
             const corsOptions = {
                 origin: [
                     'https://devburger-front-k5ky1j94h-wellingtonalves33s-projects.vercel.app',
-                    'http://localhost:3000'
+                    'http://localhost:3000',
+                    'https://devburger-front-end.vercel.app'
                 ],
                 credentials: true,
                 optionsSuccessStatus: 204,
