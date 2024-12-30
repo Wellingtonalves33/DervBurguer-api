@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node src/server.js",
-    "build": "sucrase ./src -d ./dist --transforms imports"
+    "build": "yarn install && sucrase ./src -d ./dist --transforms imports"
   },
   "keywords": [],
   "author": {
@@ -28,7 +28,8 @@
     "stripe": "^17.5.0",
     "sucrase": "^3.35.0",
     "uuid": "^11.0.3",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "eslint": "^8.56.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -40,5 +41,8 @@
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
     "sequelize-cli": "^6.6.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
