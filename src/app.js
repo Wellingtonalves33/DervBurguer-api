@@ -9,17 +9,24 @@ class App {
         try {
             console.log('Iniciando aplicação...');
             this.app = express();
-            
+
             // Configuração básica do express
             this.app.use(express.json());
             console.log('Express JSON configurado');
-            
+
             // Configuração do CORS
-            this.app.use(cors({
-                origin: '*',
+            const corsOptions = {
+                origin: [
+                    'https://devburger-front-8tcz5obgw-wellingtonalves33s-projects.vercel.app',
+                    'http://localhost:3000'
+                ],
+                credentials: true,
+                optionsSuccessStatus: 204,
                 methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-                allowedHeaders: ['Content-Type', 'Authorization']
-            }));
+                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+            };
+            
+            this.app.use(cors(corsOptions));
             console.log('CORS configurado');
 
             this.middlewares();
@@ -35,13 +42,13 @@ class App {
             const uploadsPath = resolve(__dirname, '..', 'uploads');
             this.app.use('/product-file', express.static(uploadsPath));
             this.app.use('/category-file', express.static(uploadsPath));
-            
+
             // Error handling middleware
             this.app.use((err, req, res, next) => {
                 console.error(err.stack);
                 res.status(500).json({ error: 'Algo deu errado!' });
             });
-            
+
             console.log('Middlewares configurados');
         } catch (error) {
             console.error('Erro nos middlewares:', error);
