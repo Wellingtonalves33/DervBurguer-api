@@ -17,7 +17,7 @@ class App {
             // Configuração do CORS
             const corsOptions = {
                 origin: [
-                    'https://devburger-front-8tcz5obgw-wellingtonalves33s-projects.vercel.app',
+                    'https://devburger-front-k5ky1j94h-wellingtonalves33s-projects.vercel.app',
                     'http://localhost:3000'
                 ],
                 credentials: true,
@@ -25,7 +25,7 @@ class App {
                 methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
                 allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
             };
-            
+
             this.app.use(cors(corsOptions));
             console.log('CORS configurado');
 
