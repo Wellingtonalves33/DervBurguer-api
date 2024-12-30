@@ -1,9 +1,10 @@
 import Sequelize from "sequelize";
 import mongoose from "mongoose";
-import configDatabase from '../config/database'
+import configDatabase from '../config/database';
+import 'dotenv/config';
 
 class Database {
-    constructor(){
+    constructor() {
         try {
             console.log('Iniciando conexão com banco de dados...');
             console.log('Config Database:', JSON.stringify(configDatabase, null, 2));
@@ -15,10 +16,14 @@ class Database {
         }
     }
     
-    async init(){
+    async init() {
         try {
             console.log('Tentando conectar ao PostgreSQL...');
-            this.connection = new Sequelize(configDatabase);
+            this.connection = new Sequelize(
+                process.env.NODE_ENV === 'production'
+                    ? process.env.DATABASE_URL
+                    : configDatabase
+            );
             await this.connection.authenticate();
             console.log('Conexão PostgreSQL estabelecida com sucesso');
         } catch (error) {
@@ -30,12 +35,9 @@ class Database {
     async mongo() {
         try {
             console.log('Tentando conectar ao MongoDB...');
-            const mongoURL = process.env.MONGODB_URL;
+            const mongoURL = process.env.MONGODB_URI;
             console.log('MongoDB URL:', mongoURL ? 'URL configurada' : 'URL não encontrada');
-            await mongoose.connect(mongoURL, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            });
+            await mongoose.connect(mongoURL);
             console.log('Conexão MongoDB estabelecida com sucesso');
         } catch (error) {
             console.error('Erro na conexão MongoDB:', error);
