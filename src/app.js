@@ -8,38 +8,33 @@ class App {
     constructor() {
         this.app = express()
         
-        // Configuração atualizada do CORS
-        this.app.use(cors({
-            origin: [
-                'https://devburger-front-c5gfmkp2i-wellingtonalves33s-projects.vercel.app',
-                'http://localhost:5173'  // para desenvolvimento local
-            ],
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization']
-        }));
+        // Configuração mais permissiva do CORS para teste
+        this.app.use((req, res, next) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+            
+            // Responde imediatamente a requisições OPTIONS
+            if (req.method === 'OPTIONS') {
+                return res.sendStatus(200);
+            }
+            next();
+        });
 
         this.middlewares();
         this.routes();
-    };
+    }
 
     middlewares() {
         this.app.use(express.json());
-        
-        // Configuração dos arquivos estáticos
         const uploadsPath = resolve(__dirname, '..', 'uploads');
         this.app.use('/product-file', express.static(uploadsPath));
         this.app.use('/category-file', express.static(uploadsPath));
-
-        // Adicione um middleware para log de requisições (opcional, mas útil para debug)
-        this.app.use((req, res, next) => {
-            console.log(`${req.method} ${req.path}`);
-            next();
-        });
-    };
+    }
 
     routes() {
         this.app.use(routes);
-    };
+    }
 }
 
 export default new App().app;
