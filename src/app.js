@@ -6,33 +6,42 @@ import './database';
 
 class App {
     constructor() {
-        this.app = express()
+        this.app = express();
         
-        // Configuração mais permissiva do CORS para teste
-        this.app.use((req, res, next) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-            
-            // Responde imediatamente a requisições OPTIONS
-            if (req.method === 'OPTIONS') {
-                return res.sendStatus(200);
-            }
-            next();
-        });
+        // Configuração básica do express
+        this.app.use(express.json());
+        
+        // Usando o middleware cors
+        this.app.use(cors({
+            origin: '*',
+            methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization']
+        }));
 
+        // Resto das configurações
         this.middlewares();
         this.routes();
     }
 
     middlewares() {
-        this.app.use(express.json());
         const uploadsPath = resolve(__dirname, '..', 'uploads');
         this.app.use('/product-file', express.static(uploadsPath));
         this.app.use('/category-file', express.static(uploadsPath));
+        
+        // Middleware para logging
+        this.app.use((req, res, next) => {
+            console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+            next();
+        });
     }
 
     routes() {
+        // Rota de teste
+        this.app.get('/test', (req, res) => {
+            res.json({ message: 'API is working!' });
+        });
+
+        // Suas rotas
         this.app.use(routes);
     }
 }
