@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "build": "yarn install && sucrase ./src -d ./dist --transforms imports"
+    "build": "sucrase ./src -d ./dist --transforms imports"
   },
   "keywords": [],
   "author": {
@@ -28,6 +28,7 @@
     "stripe": "^17.5.0",
     "sucrase": "^3.35.0",
     "uuid": "^11.0.3",
+    "vercel": "^39.2.2",
     "yup": "^1.4.0"
   },
   "devDependencies": {
