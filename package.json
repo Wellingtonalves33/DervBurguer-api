@@ -2,6 +2,7 @@
   "name": "dervburguer-api",
   "version": "1.0.0",
   "main": "src/server.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon",
     "start": "node src/server.js",
@@ -45,4 +46,4 @@
   "engines": {
     "node": ">=16.0.0"
   }
-}
+ }
