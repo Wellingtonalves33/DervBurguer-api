@@ -1,13 +1,7 @@
-FROM node:16
+FROM node:16-slim
 
 WORKDIR /app
-
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-
 COPY . .
-
+RUN yarn install
 ENV PORT=3333
-EXPOSE 3333
-
 CMD ["yarn", "start"]
