@@ -16,12 +16,11 @@ class CategoryController {
 
         const { admin: isAdmin } = await User.findByPk(request.userId);
 
-        if (!isAdmin){
+        if (!isAdmin) {
             return response.status(401).json();
         }
 
-
-        const {filename: path} = request.file;
+        const { filename: path } = request.file;
         const { name } = request.body;
 
         const categoryExists = await Category.findOne({
@@ -30,7 +29,7 @@ class CategoryController {
             },
         });
         if (categoryExists) {
-            return response.status(400).json({ error: 'Category alrady exists' });
+            return response.status(400).json({ error: 'Category already exists' });
         }
 
         const { id } = await Category.create({
@@ -54,7 +53,7 @@ class CategoryController {
 
         const { admin: isAdmin } = await User.findByPk(request.userId);
 
-        if (!isAdmin){
+        if (!isAdmin) {
             return response.status(401).json();
         }
 
@@ -62,37 +61,38 @@ class CategoryController {
 
         const categoryExists = await Category.findByPk(id);
 
-        if (categoryExists) {
-            return response.status(400).json({ message: 'make sure your category Id is correct'})
+        if (!categoryExists) {
+            return response.status(400).json({ message: 'make sure your category Id is correct' });
         }
 
         let path;
-        if(request.file){
+        if (request.file) {
             path = request.file.filename;
         }
 
         const { name } = request.body;
 
-        if(name){  
-        const categoryNameExists = await Category.findOne({
-            where: {
-                name,
-            },
-        });
-        if (categoryNameExists && categoryNameExists.id !== +id) {
-            return response.status(400).json({ error: 'Category already exists' });
-        }
+        if (name) {
+            const categoryNameExists = await Category.findOne({
+                where: {
+                    name,
+                },
+            });
+            if (categoryNameExists && categoryNameExists.id !== +id) {
+                return response.status(400).json({ error: 'Category already exists' });
+            }
         }
 
-        await Category.update({
-            name,
-            path,
-        },{
-            where:{
-                id,
-            },
-        },
-    )
+        const updateData = {};
+        if (name) updateData.name = name;
+        if (path) updateData.path = path;
+
+        await Category.update(
+            updateData,
+            {
+                where: { id },
+            }
+        );
 
         return response.status(200).json();
     }
@@ -103,7 +103,5 @@ class CategoryController {
         return response.json(categories);
     }
 }
-
-
 
 export default new CategoryController();
