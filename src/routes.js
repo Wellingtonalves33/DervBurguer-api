@@ -11,7 +11,9 @@ import CreatePaymentIntentController from "./app/controllers/stripe/CreatePaymen
 
 const routes = new Router()
 
-const upload = multer(multerConfig)
+const upload = multer(multerConfig) 
+
+routes.get('/', (req, res) => res.json({message: 'Hello to API'}))
 
 routes.post('/users', UserController.store);
 routes.post('/session', SessionController.store); 
