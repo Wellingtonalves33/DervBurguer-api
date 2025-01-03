@@ -5,4 +5,4 @@ COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
 ENV PORT=3333
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]
