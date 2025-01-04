@@ -1,7 +1,7 @@
 module.exports = {
     dialect: 'postgres',
     port: 5432,
-    url: 'postgresql://postgres:UpkGvSZStdDuczoIzQOdXgncKkGGarVa@autorack.proxy.rlwy.net:55774/railway',
+    url: 'postgresql://postgres:KlzdeEAmvBgLQezXggtTiiisxwRlTRIU@roundhouse.proxy.rlwy.net:35897/railway',
     database: 'devburger',
     define: {
         timestamps: true,
